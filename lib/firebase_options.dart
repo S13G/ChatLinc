@@ -50,21 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCF8vFtaTSgjxxM3xWbAlfztRFD-zA-Mr0',
-    appId: '1:1095256349838:android:d172b69e3c5818ccab7ddf',
-    messagingSenderId: '1095256349838',
-    projectId: 'fir-course-2e261',
-    databaseURL: 'https://fir-course-2e261-default-rtdb.firebaseio.com',
-    storageBucket: 'fir-course-2e261.appspot.com',
+    apiKey: 'AIzaSyCwZ1M7UqPmZ_OTNsRRg-YznvSPQZh1l6k',
+    appId: '1:116778473414:android:d5142debb465ab665e04c7',
+    messagingSenderId: '116778473414',
+    projectId: 'fir-chat-6cc80',
+    storageBucket: 'fir-chat-6cc80.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDuxxH2ATCUCkpaWZwp14-5_AA3ITkvmC4',
-    appId: '1:1095256349838:ios:0243bd2f85b0f8adab7ddf',
-    messagingSenderId: '1095256349838',
-    projectId: 'fir-course-2e261',
-    databaseURL: 'https://fir-course-2e261-default-rtdb.firebaseio.com',
-    storageBucket: 'fir-course-2e261.appspot.com',
+    apiKey: 'AIzaSyBwYoHUHpYBOU7dQZyIYokyyA7K5J_g5zk',
+    appId: '1:116778473414:ios:58ca7b3e42fb4c3e5e04c7',
+    messagingSenderId: '116778473414',
+    projectId: 'fir-chat-6cc80',
+    storageBucket: 'fir-chat-6cc80.appspot.com',
     iosBundleId: 'com.chatlinc.chatlinc',
   );
 }
