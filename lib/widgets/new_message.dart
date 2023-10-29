@@ -6,7 +6,7 @@ class NewMessage extends StatefulWidget {
   const NewMessage({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  State<NewMessage> createState() {
     return _NewMessageState();
   }
 }
@@ -36,36 +36,36 @@ class _NewMessageState extends State<NewMessage> {
         .doc(user.uid)
         .get();
 
-    await FirebaseFirestore.instance.collection('chat').add({
+    FirebaseFirestore.instance.collection('chat').add({
       'text': enteredMessage,
-      'created_at': Timestamp.now(),
-      'userID': user.uid,
+      'createdAt': Timestamp.now(),
+      'userId': user.uid,
       'username': userData.data()!['username'],
-      'userImage': userData.data()!['image_url']
+      'userImage': userData.data()!['image_url'],
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 15,
-        right: 1,
-      ),
+      padding: const EdgeInsets.only(left: 15, right: 1, bottom: 14),
       child: Row(
         children: [
           Expanded(
             child: TextField(
-                controller: _messageController,
-                textCapitalization: TextCapitalization.sentences,
-                autocorrect: true,
-                enableSuggestions: true,
-                decoration: const InputDecoration(labelText: 'Send a message')),
+              controller: _messageController,
+              textCapitalization: TextCapitalization.sentences,
+              autocorrect: true,
+              enableSuggestions: true,
+              decoration: const InputDecoration(labelText: 'Send a message...'),
+            ),
           ),
           IconButton(
             color: Theme.of(context).colorScheme.primary,
+            icon: const Icon(
+              Icons.send,
+            ),
             onPressed: _submitMessage,
-            icon: const Icon(Icons.send),
           ),
         ],
       ),

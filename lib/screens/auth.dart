@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:chatlinc/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -31,6 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final isValid = _form.currentState!.validate();
 
     if (!isValid || !_isLogin && _selectedImage == null) {
+      // show error message ...
       return;
     }
 
@@ -40,13 +41,13 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _isAuthenticating = true;
       });
-
       if (_isLogin) {
         final userCredentials = await _firebase.signInWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
+
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('user_images')
@@ -65,10 +66,13 @@ class _AuthScreenState extends State<AuthScreen> {
         });
       }
     } on FirebaseAuthException catch (error) {
+      if (error.code == 'email-already-in-use') {
+        // ...
+      }
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error.message ?? 'Authentication failed'),
+          content: Text(error.message ?? 'Authentication failed.'),
         ),
       );
       setState(() {
@@ -108,14 +112,13 @@ class _AuthScreenState extends State<AuthScreen> {
                         children: [
                           if (!_isLogin)
                             UserImagePicker(
-                              onPickedImage: (pickedImage) {
+                              onPickImage: (pickedImage) {
                                 _selectedImage = pickedImage;
                               },
                             ),
                           TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Email address',
-                            ),
+                                labelText: 'Email Address'),
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
@@ -123,8 +126,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               if (value == null ||
                                   value.trim().isEmpty ||
                                   !value.contains('@')) {
-                                return 'Please enter a valid email address';
+                                return 'Please enter a valid email address.';
                               }
+
                               return null;
                             },
                             onSaved: (value) {
@@ -133,16 +137,14 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           if (!_isLogin)
                             TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'Username',
-                              ),
-                              keyboardType: TextInputType.emailAddress,
+                              decoration:
+                                  const InputDecoration(labelText: 'Username'),
                               enableSuggestions: false,
                               validator: (value) {
                                 if (value == null ||
-                                    value.trim().isEmpty ||
+                                    value.isEmpty ||
                                     value.trim().length < 4) {
-                                  return 'Please enter at least 4 characters';
+                                  return 'Please enter at least 4 characters.';
                                 }
                                 return null;
                               },
@@ -151,13 +153,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               },
                             ),
                           TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
-                            ),
+                            decoration:
+                                const InputDecoration(labelText: 'Password'),
                             obscureText: true,
                             validator: (value) {
                               if (value == null || value.trim().length < 6) {
-                                return 'Password must be at least 6 characters long';
+                                return 'Password must be at least 6 characters long.';
                               }
                               return null;
                             },
@@ -172,10 +173,11 @@ class _AuthScreenState extends State<AuthScreen> {
                             ElevatedButton(
                               onPressed: _submit,
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer),
-                              child: Text(_isLogin ? 'Login' : 'Sign up'),
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                              ),
+                              child: Text(_isLogin ? 'Login' : 'Signup'),
                             ),
                           if (!_isAuthenticating)
                             TextButton(
@@ -186,7 +188,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               },
                               child: Text(_isLogin
                                   ? 'Create an account'
-                                  : 'I already have an account.'),
+                                  : 'I already have an account'),
                             ),
                         ],
                       ),
