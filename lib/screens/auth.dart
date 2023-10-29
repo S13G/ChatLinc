@@ -1,3 +1,4 @@
+import 'package:chatlinc/widgets/user_image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -8,11 +9,11 @@ class AuthScreen extends StatefulWidget {
 
   @override
   State<AuthScreen> createState() {
-    return _AuthScreen();
+    return _AuthScreenState();
   }
 }
 
-class _AuthScreen extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
 
   var _isLogin = true;
@@ -31,7 +32,6 @@ class _AuthScreen extends State<AuthScreen> {
       if (_isLogin) {
         final userCredentials = await _firebase.signInWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
-
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
@@ -76,6 +76,7 @@ class _AuthScreen extends State<AuthScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          if (!_isLogin) const UserImagePicker(),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email address',
