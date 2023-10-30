@@ -21,21 +21,26 @@ class _NewMessageState extends State<NewMessage> {
   }
 
   void _submitMessage() async {
+    // Get the entered message from the text input
     final enteredMessage = _messageController.text;
 
+    // Check if the message is empty or only contains whitespace
     if (enteredMessage.trim().isEmpty) {
-      return;
+      return; // Do nothing if the message is empty
     }
 
+    // Hide the keyboard after submitting the message
     FocusScope.of(context).unfocus();
-    _messageController.clear();
+    _messageController.clear(); // Clear the input field
 
+    // Get the current user's information
     final user = FirebaseAuth.instance.currentUser!;
     final userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get();
 
+    // Add the message to the 'chat' collection in Firestore
     FirebaseFirestore.instance.collection('chat').add({
       'text': enteredMessage,
       'created_at': Timestamp.now(),

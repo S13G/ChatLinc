@@ -20,18 +20,18 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
 
-  var _isLogin = true;
+  var _isLogin = true; // Indicates whether the user is logging in or signing up
   var _enteredEmail = '';
   var _enteredPassword = '';
   var _enteredUsername = '';
   File? _selectedImage;
-  var _isAuthenticating = false;
+  var _isAuthenticating = false; // Indicates if authentication is in progress
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid || !_isLogin && _selectedImage == null) {
-      // show error message ...
+    if (!isValid || (!_isLogin && _selectedImage == null)) {
+      // Show error message when validation fails
       return;
     }
 
@@ -67,7 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {
-        // ...
+        // Handle the case where the email is already in use
       }
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -128,7 +128,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                   !value.contains('@')) {
                                 return 'Please enter a valid email address.';
                               }
-
                               return null;
                             },
                             onSaved: (value) {
@@ -138,7 +137,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           if (!_isLogin)
                             TextFormField(
                               decoration:
-                                  const InputDecoration(labelText: 'Username'),
+                              const InputDecoration(labelText: 'Username'),
                               enableSuggestions: false,
                               validator: (value) {
                                 if (value == null ||
@@ -154,7 +153,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           TextFormField(
                             decoration:
-                                const InputDecoration(labelText: 'Password'),
+                            const InputDecoration(labelText: 'Password'),
                             obscureText: true,
                             validator: (value) {
                               if (value == null || value.trim().length < 6) {

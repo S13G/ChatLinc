@@ -12,18 +12,22 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  // Set up push notifications using Firebase Cloud Messaging (FCM)
   void setupPushNotifications() async {
     final fcm = FirebaseMessaging.instance;
 
+    // Request user permission for notifications
     await fcm.requestPermission();
 
-
+    // Subscribe to the 'chat' topic to receive chat-related notifications
     fcm.subscribeToTopic('chat');
   }
 
   @override
   void initState() {
     super.initState();
+
+    // Call the setupPushNotifications function during initialization
     setupPushNotifications();
   }
 
@@ -32,9 +36,11 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('FlutterChat'),
+        // Display the app title in the app bar
         actions: [
           IconButton(
             onPressed: () {
+              // Log out the user when the exit button is pressed
               FirebaseAuth.instance.signOut();
             },
             icon: Icon(
@@ -44,12 +50,13 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: const [
+      body: const Column(
+        children: [
           Expanded(
-            child: ChatMessages(),
+            child:
+                ChatMessages(), // Display chat messages in an expanded widget
           ),
-          NewMessage(),
+          NewMessage(), // Display the new message input field
         ],
       ),
     );

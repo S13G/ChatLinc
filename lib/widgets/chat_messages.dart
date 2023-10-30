@@ -8,23 +8,26 @@ class ChatMessages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the currently authenticated user using Firebase Authentication
     final authenticatedUser = FirebaseAuth.instance.currentUser!;
 
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('chat')
           .orderBy(
-            'created_at',
-            descending: true,
-          )
+        'created_at',
+        descending: true,
+      )
           .snapshots(),
       builder: (ctx, chatSnapshots) {
+        // Check the connection state of the data stream
         if (chatSnapshots.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
 
+        // Handle various cases when there is no data or an error occurs
         if (!chatSnapshots.hasData || chatSnapshots.data!.docs.isEmpty) {
           return const Center(
             child: Text('No messages found.'),
@@ -37,6 +40,7 @@ class ChatMessages extends StatelessWidget {
           );
         }
 
+        // Extract the chat messages from the snapshot
         final loadedMessages = chatSnapshots.data!.docs;
 
         return ListView.builder(
@@ -55,9 +59,10 @@ class ChatMessages extends StatelessWidget {
 
             final currentMessageUserId = chatMessage['userId'];
             final nextMessageUserId =
-                nextChatMessage != null ? nextChatMessage['userId'] : null;
+            nextChatMessage != null ? nextChatMessage['userId'] : null;
             final nextUserIsSame = nextMessageUserId == currentMessageUserId;
 
+            // Determine if the next user is the same as the current user and choose the appropriate MessageBubble widget
             if (nextUserIsSame) {
               return MessageBubble.next(
                 message: chatMessage['text'],
